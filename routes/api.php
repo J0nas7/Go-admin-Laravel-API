@@ -18,4 +18,5 @@ Route::get('/getMenuLocation', [PageController::class, 'getMenuLocation']);
 
 // WP admin
 Route::post('/adminLogin', [AuthController::class, 'adminLogin']);
-Route::get('/adminLogin', [AuthController::class, 'adminLogin']);
+Route::get('/adminLogout', [AuthController::class, 'adminLogout']);
+Route::get('/adminLoggedInTest', [AuthController::class, 'adminLoggedInTest']);

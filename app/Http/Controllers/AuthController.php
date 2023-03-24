@@ -4,31 +4,69 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 use Corcel\Model\User;
 
 class AuthController extends Controller
 {
+    private $request;
+
+    // Instantiate a new controller instance
+    public function __construct(Request $request) {
+        //$this->request = json_decode($request->input('postContent'));
+        //$this->request = json_decode($request->input('postContent'));
+        $this->request = json_decode($request->input('postContent'));
+    }
+
     // Test if user logon is an admin in WP
     public function adminValidate($name): bool {
         $user = User::where("user_login", $name)->orWhere("user_email", $name)->first();
         $isAdmin = strpos($user->meta->clk_027e37803a_capabilities, "administrator");
         if ($isAdmin !== false) {
-            echo $name.": IsAdmin / ";
-            echo $user->meta->clk_027e37803a_capabilities." / ";
+            /*echo $name.": IsAdmin / ";
+            echo $user->meta->clk_027e37803a_capabilities." / ";*/
             return true;
         } else {
-            echo $name.": NotAdmin / ";
-            echo $user->meta->clk_027e37803a_capabilities." / ";
+            /*echo $name.": NotAdmin / ";
+            echo $user->meta->clk_027e37803a_capabilities." / ";*/
             return false;
         }
     }
 
+    public function adminLoggedInTest(Request $request) {
+        if (Session::get('adminLoggedIn')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Is logged in',
+                'data'    => true
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Is NOT logged in',
+                'data'    => false
+            ], 200);
+        }
+    }
+
+    public function adminLogout() {
+        Session::forget('adminLoggedIn');
+        Session::flush();
+        //$request->session()->forget('adminLoggedIn');
+        //$request->session()->flush();
+        return response()->json([
+            'success' => true,
+            'message' => 'Is logged out',
+            'data'    => true
+        ], 200);
+    }
+
     // Login with WP credentials
     public function adminLogin(Request $request) {
-        $theUsername = $request->username ?? "";
-        $thePassword = $request->password ?? "";
+        $theUsername = $this->request->username ?? $request->username;
+        $thePassword = $this->request->password ?? $request->password;
 
         // Validate that input request is filled
         $validator = Validator::make($request->all(), [
@@ -65,6 +103,7 @@ class AuthController extends Controller
             
             // Login attempt succeeded and it's an admin
             if ($isAdmin) {
+                Session::put('adminLoggedIn', 'yes');
                 return response()->json([
                     'success' => true,
                     'message' => 'Admin Login',
