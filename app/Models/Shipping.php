@@ -33,7 +33,8 @@ class Shipping extends Model
                 ->orWhere('meta_key', '_shipping_address_1')
                 ->orWhere('meta_key', '_shipping_address_2')
                 ->orWhere('meta_key', '_shipping_postcode')
-                ->orWhere('meta_key', '_shipping_city');
+                ->orWhere('meta_key', '_shipping_city')
+                ->orWhere('meta_key', 'theHelperIs');
         });
     }
 }

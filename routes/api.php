@@ -23,10 +23,14 @@ Route::group(['middleware' => ['adminonly']], function () {
     /*
         WooCommerce Orders
     */
-    // Read all orders
+    // Read summary of all orders
     Route::post('/readAllOrdersSummary', [OrderController::class, 'readAllOrdersSummary']);
     Route::get('/readAllOrdersSummary', [OrderController::class, 'readAllOrdersSummary']);
+    
+    // Read one specific order
+    Route::post('/readOneOrder', [OrderController::class, 'readOneOrder']);
 });
+Route::get('/readOneOrder', [OrderController::class, 'readOneOrder']);
 
 /*
     WP Admin Authentication

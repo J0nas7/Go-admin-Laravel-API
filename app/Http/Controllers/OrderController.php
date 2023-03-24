@@ -35,18 +35,36 @@ class OrderController extends Controller
         $getOrders = Order::orderBy('order_id', 'DESC')->get();
         $ordersSummary = array();
         foreach ($getOrders as $order) {
-            $ships = $order->shippingInfos;
-            foreach ($ships AS $value) {
-                if ($value->meta_key == "_shipping_address_1")              $order->adr = $value->meta_value;
-                else if ($value->meta_key == "_shipping_address_2")         $order->street_nr = $value->meta_value;
-                else if ($value->meta_key == "_shipping_postcode")          $order->postcode = $value->meta_value;
-                else if ($value->meta_key == "_shipping_city")              $order->city = $value->meta_value;
-                else if ($value->meta_key == "custom_delivery_data")        $order->delivery_data = $value->meta_value;
-                else if ($value->meta_key == "custom_delivery_range_data") { $order->delivery_range = $value->meta_value; }
-            }
-            
+            $order = $this->orderShippingInfo($order);
             $ordersSummary[] = $order->getSummary();
         }
         return $ordersSummary;
+    }
+
+    private function orderShippingInfo($order) {
+        $ships = $order->shippingInfos;
+        foreach ($ships AS $value) {
+            if ($value->meta_key == "_shipping_address_1")              $order->adr = $value->meta_value;
+            else if ($value->meta_key == "_shipping_address_2")         $order->street_nr = $value->meta_value;
+            else if ($value->meta_key == "_shipping_postcode")          $order->postcode = $value->meta_value;
+            else if ($value->meta_key == "_shipping_city")              $order->city = $value->meta_value;
+            else if ($value->meta_key == "custom_delivery_data")        $order->delivery_data = $value->meta_value;
+            else if ($value->meta_key == "custom_delivery_range_data") { $order->delivery_range = $value->meta_value; }
+            else if ($value->meta_key == "theHelperIs") {               $order->theHelperIs = $value->meta_value; }
+        }
+        return $order;
+    }
+
+    public function readOneOrder(Request $request) {
+        $orderNr = json_decode($this->request->input('postContent'))->orderNr ?? 415;
+        $getOrder = Order::find($orderNr);
+        $getOrder = $this->orderShippingInfo($getOrder);
+        $getOrder = $getOrder->getComplete();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Read Order '.$orderNr,
+            'data'    => $getOrder
+        ], 200);
     }
 }
