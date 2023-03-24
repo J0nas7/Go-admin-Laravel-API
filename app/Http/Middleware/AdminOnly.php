@@ -22,6 +22,8 @@ class AdminOnly
             return $next($request);
         }
 
+        Session::forget('adminLoggedIn');
+        Session::flush();
         return response()->json(['error' => 'Unauthorized'], 401); // 401 Unauthorized
     }
 }

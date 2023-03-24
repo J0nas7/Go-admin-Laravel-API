@@ -49,19 +49,5 @@ class PageController extends Controller
             'data'    => $menuItems
         ], 200);
     }
-
-    /**
-     * showSpecificPage
-     * Page content by slug
-     *
-     * @return view
-     */
-    public function showSpecificPage() {
-        $thePage = Page::slug('levering')->first();
-
-        return view('page', [
-            'displayPage' => $thePage,
-        ]);
-    }
 }
 ?>

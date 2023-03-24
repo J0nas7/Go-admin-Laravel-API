@@ -20,7 +20,13 @@ class AuthController extends Controller
         $this->request = json_decode($request->input('postContent'));
     }
 
-    // Test if user logon is an admin in WP
+    /**
+     * adminValidate
+     * Validate if user login is an admin in WP
+     *
+     * @param string $name
+     * @return bool
+     */
     public function adminValidate($name): bool {
         $user = User::where("user_login", $name)->orWhere("user_email", $name)->first();
         $isAdmin = strpos($user->meta->clk_027e37803a_capabilities, "administrator");
@@ -35,6 +41,12 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * adminLoggedInTest
+     * Validate if adminLoggedIn Session is set or not
+     *
+     * @return response json
+     */
     public function adminLoggedInTest(Request $request) {
         if (Session::get('adminLoggedIn')) {
             return response()->json([
@@ -51,6 +63,12 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * adminLogout
+     * Log out WP admin user by deleting the Session
+     *
+     * @return response json
+     */
     public function adminLogout() {
         Session::forget('adminLoggedIn');
         Session::flush();
@@ -63,7 +81,14 @@ class AuthController extends Controller
         ], 200);
     }
 
-    // Login with WP credentials
+    /**
+     * adminLogin
+     * Login WP admin with username/email and password credentials
+     *
+     * @param  string $request->username
+     * @param  string $request->password
+     * @return response json
+     */
     public function adminLogin(Request $request) {
         $theUsername = $this->request->username ?? $request->username;
         $thePassword = $this->request->password ?? $request->password;

@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Order;
+use App\Helpers\DataService;
 
 class OrderController extends Controller
 {
     private $request;
     private $searchTerm;
     private $pageNr;
+
     // Instantiate a new controller instance
     public function __construct(Request $request) {
         $this->request = $request;
@@ -17,13 +20,15 @@ class OrderController extends Controller
     }
 
     // Return all orders summary
-    public function readAllOrdersSummary(): View {
+    public function readAllOrdersSummary() {
         $theOrders = $this->getOrdersSummary();
         $theOrders = DataService::filterSearchResult($theOrders, $this->searchTerm);
         $theOrders = DataService::defineOffset($theOrders, $this->pageNr, 12);
-        return view('readAllOrdersSummary', [
-            'result_output' => $theOrders
-        ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Orders Summary',
+            'data'    => $theOrders
+        ], 200);
     }
 
     private function getOrdersSummary() {
