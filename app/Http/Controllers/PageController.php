@@ -45,7 +45,7 @@ class PageController extends Controller
         
         return response()->json([
             'success' => true,
-            'message' => 'Get Menu Location by Slug',
+            'message' => 'Get Menu Location by Slug: '.$slug,
             'data'    => $menuItems
         ], 200);
     }

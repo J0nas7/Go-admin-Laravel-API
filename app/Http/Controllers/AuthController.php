@@ -140,7 +140,7 @@ class AuthController extends Controller
                 $errorMsg = "Not an Admin";
             }
         // Login attempt failed
-        } else {
+        } else if (empty($errorMsg)) {
             $loginFailed = true;
             $errorMsg = "Login Attempt Failed";
         }
