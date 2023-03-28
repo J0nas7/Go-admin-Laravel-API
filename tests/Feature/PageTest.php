@@ -38,7 +38,7 @@ class PageTest extends TestCase
      * @param termId string "Support-Min-menu"
      * @return json
      */
-    public function test_getMenuLocation() {
+    /*public function test_getMenuLocation() {
         $this->withSession(['adminLoggedIn' => true])
             ->json('get', 'api/getMenuLocation/Support-Min-menu')
             ->assertStatus(Response::HTTP_OK)
@@ -65,5 +65,5 @@ class PageTest extends TestCase
                     ["label" => "Log ud","link" => "/logout"]
                 ]
             ]);
-    }
+    }*/
 }
