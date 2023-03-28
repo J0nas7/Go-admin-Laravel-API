@@ -42,7 +42,7 @@ jobs:
         php artisan key:generate
  
     - name: Print SQL statements
-      run: php artisan migrate --pretend
+      run: php artisan migrate
  
     - name: Run Testsuite
       run: vendor/bin/phpunit tests/
