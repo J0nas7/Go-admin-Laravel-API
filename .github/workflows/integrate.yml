@@ -41,8 +41,11 @@ jobs:
         cp .env.ci .env
         php artisan key:generate
  
-    - name: Print SQL statements
+    - name: Migrate DB
       run: php artisan migrate
+      
+    - name: Seed DB
+      run: php artisan db:seed
  
     - name: Run Testsuite
       run: vendor/bin/phpunit tests/
