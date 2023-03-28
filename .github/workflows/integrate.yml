@@ -41,5 +41,8 @@ jobs:
         cp .env.ci .env
         php artisan key:generate
  
+    - name: Print SQL statements
+      run: php artisan migrate --pretend
+ 
     - name: Run Testsuite
       run: vendor/bin/phpunit tests/
