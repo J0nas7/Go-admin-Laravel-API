@@ -106,12 +106,6 @@ class AuthController extends Controller
         $loginFailed = false;
         $errorMsg = "";
 
-        // If input request fails validation
-        if ($validator->fails()) {
-            $loginFailed = true;
-            $errorMsg = "Empty username or password.";
-        }
-
         // Login attempts with both email and name
         $authResultWithEmail = Auth::validate([
             'email' => $theUsername, // or using 'username' too
@@ -140,9 +134,15 @@ class AuthController extends Controller
                 $errorMsg = "Not an Admin";
             }
         // Login attempt failed
-        } else if (empty($errorMsg)) {
+        } else if (!$validator->fails() && empty($errorMsg)) {
             $loginFailed = true;
             $errorMsg = "Login Attempt Failed";
+        }
+
+        // If input request fails validation
+        if ($validator->fails() && empty($errorMsg)) {
+            $loginFailed = true;
+            $errorMsg = "Empty request";
         }
 
         if ($loginFailed) {
