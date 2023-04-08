@@ -37,16 +37,24 @@ class PageController extends Controller
     public function getMenuLocation($slug) {
         $menu = Menu::slug($slug)->first();
         $menuItems = array();
-        foreach ($menu->items as $item) {
-            $itemLabel = $item->title;
-            $itemLink = $item->_menu_item_url;
-            $menuItems[] = array("label" => $itemLabel, "link" => $itemLink);
+        if ($menu) {
+            foreach ($menu->items as $item) {
+                $itemLabel = $item->title;
+                $itemLink = $item->_menu_item_url;
+                $menuItems[] = array("label" => $itemLabel, "link" => $itemLink);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Get Menu Location by Slug: '.$slug,
+                'data'    => $menuItems
+            ], 200);
         }
         
         return response()->json([
-            'success' => true,
-            'message' => 'Get Menu Location by Slug: '.$slug,
-            'data'    => $menuItems
+            'success' => false,
+            'message' => "Menu slug doesn't exist",
+            'data'    => ''
         ], 200);
     }
 }

@@ -50,7 +50,7 @@ class AuthTest extends TestCase
             ->assertStatus(Response::HTTP_OK)
             ->assertExactJson([
                 'success' => false,
-                'message' => "Empty username or password.",
+                'message' => "Empty request",
                 'data'    => false
             ]);
     }
